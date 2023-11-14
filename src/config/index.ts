@@ -29,5 +29,7 @@ export default {
         video: {
             url: process.env.VIDEO_BASE_URL || "https://videos.foo.com",
         },
-    }
+    },
+    passwordSecretKey: process.env.PASSWORD_SECRET_KEY|| "ThisIsSecurePasswordKey",
+    tokenSecretKey:process.env.TOKEN_SECRET_KEY || "ThisISTokenKey"
 };
