@@ -1,0 +1,30 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "env": {
+    "es2020": true,
+    "node": true,
+    "es6": true,
+    "jest": true,
+    "mongo": true,
+    "browser": false
+  },
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["@typescript-eslint", "prettier"],
+  "rules": {
+    "no-console": "error",
+    "no-return-await": 1,
+    "@typescript-eslint/explicit-member-accessibility": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/no-parameter-properties": 0,
+    "@typescript-eslint/interface-name-prefix": 0
+  },
+  "ignorePatterns": ["tests/", "scripts/"]
+}
