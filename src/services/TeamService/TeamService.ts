@@ -153,6 +153,15 @@ export class TeamService {
     if (!team) throw new Error(TeamServiceErrors.TEAM_NOT_FOUND);
     return team;
   }
+
+  async getBoardsByTeamId(teams:string[]):Promise<string[]>{
+    const boards : string[] =[]
+    const teamDocs : ITeamSchema[] | null= await this.teamSchema.find({id:{$in:teams}})
+    teamDocs?.forEach((team)=>{
+      boards.concat(...team.boards)
+    })
+    return boards
+  }
   private prepareTeamListing(teams: ITeamSchema[]): ITeamListing[] {
     const teamListing: ITeamListing[] = [];
 
@@ -173,6 +182,13 @@ export class TeamService {
     return team.members.some((member)=>{
       return member.userId != userId && member.role == TeamRoles.ADMIN;
     })
+  }
+ async isTeamAdminByTeamId(teamId:string,userId:string){
+    const teamDetails: ITeamSchema | null =
+        await this.teamSchema.findById(teamId);
+    if (!teamDetails) throw new Error(TeamServiceErrors.TEAM_NOT_FOUND);
+    return this.isTeamAdmin(teamDetails,userId)
+
   }
 }
 

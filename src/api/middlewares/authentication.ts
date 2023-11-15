@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import _ from "lodash";
 import Logger from "../../loaders/logger";
 import { Container } from "typedi";
-import { AuthorizationService } from "../../services/Authorization Service/AuthorizationService";
+import { AuthorizationService } from "../../services/AuthorizationService/AuthorizationService";
 import { UnauthorizedError } from "./authorization";
 
 const WHITELISTED_API_PATHS = ["/signup", "/login"];

@@ -1,12 +1,12 @@
 import { Router, Request, Response } from "express";
 import { Container } from "typedi";
-import { TeamService } from "../../services/Team Service/TeamService";
+import { TeamService } from "../../services/TeamService/TeamService";
 import {
   IAddMemberFields,
   ITeamCreationFields,
   ITeamListing,
   IUpdateTeamFields,
-} from "../../services/Team Service/ITeamService";
+} from "../../services/TeamService/ITeamService";
 import Logger from "../../loaders/logger";
 import { ResponseWrapper } from "../responses/responseWrapper";
 import { ITeamSchema } from "../../models/Schemas/team";

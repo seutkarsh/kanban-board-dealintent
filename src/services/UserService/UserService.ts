@@ -57,6 +57,12 @@ export class UserService {
     return { user: user.id, token: token };
   }
 
+  async getTeamsByUserId(userId:string):Promise<string[]>{
+    const user:IUserSchema | null = await this.userSchema.findById(userId)
+    if(!user) throw new Error(UserServiceErrors.USER_DOESNT_EXISTS)
+
+    return user.team
+  }
   private getUserByEmail(email: string) {
     return this.userSchema.findOne({ email: email });
   }
