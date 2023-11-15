@@ -4,6 +4,8 @@ import Logger from "../../loaders/logger";
 import { Container } from "typedi";
 import { AuthorizationService } from "../../services/Authorization Service/AuthorizationService";
 import { UnauthorizedError } from "./authorization";
+
+const WHITELISTED_API_PATHS = ["/signup", "/login"];
 export const authentication = async (
   req: Request,
   res: Response,
@@ -27,6 +29,17 @@ export const authentication = async (
       return next(
         new UnauthorizedError(
           new Error(`Unauthorized Access: Auth Token ${e}`),
+        ),
+      );
+    }
+  }
+
+  if (!req.user) {
+    const [apiPath] = req.url.split("?");
+    if (!WHITELISTED_API_PATHS.includes(apiPath)) {
+      return next(
+        new UnauthorizedError(
+          new Error("Unauthorized Access: Auth Token not present"),
         ),
       );
     }
