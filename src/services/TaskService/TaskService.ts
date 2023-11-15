@@ -3,7 +3,6 @@ import { BoardService } from "../BoardService/BoardService";
 import { TeamService } from "../TeamService/TeamService";
 import { ITaskSchema } from "../../models/Schemas/task";
 import mongoose, { Model } from "mongoose";
-import { IUserSchema } from "../../models/Schemas/user";
 import {
   ITaskCreationFields,
   ITaskUpdateFields,
@@ -40,6 +39,8 @@ export class TaskService {
       dueDate: taskDetails.dueDate,
       priority: taskDetails.priority,
     });
+
+    await this.boardService.addTask(task.board, task.id);
     return task;
   }
 
@@ -55,31 +56,43 @@ export class TaskService {
     if (taskDetails.description)
       updateObject.description = taskDetails.description;
     if (taskDetails.priority) updateObject.priority = taskDetails.priority;
-    if (taskDetails.status) updateObject.name = taskDetails.status;
+    if (taskDetails.status) updateObject.status = taskDetails.status;
     if (taskDetails.dueDate) updateObject.dueDate = taskDetails.dueDate;
 
-    const updatedTask: ITaskSchema | null = await this.taskSchema.findByIdAndUpdate(
-      taskDetails.taskId,
-      updateObject,
-      { new: true, useFindAndModify: false },
-    );
-    if(!updatedTask) throw new Error(TaskServiceErrors.TASK_NOT_FOUND)
-    return updatedTask
+    const updatedTask: ITaskSchema | null =
+      await this.taskSchema.findByIdAndUpdate(
+        taskDetails.taskId,
+        updateObject,
+        { new: true, useFindAndModify: false },
+      );
+    if (!updatedTask) throw new Error(TaskServiceErrors.TASK_NOT_FOUND);
 
+    if (taskDetails.status) {
+      await this.boardService.changeStatus(
+        updatedTask.board,
+        updatedTask.id,
+        task.status,
+        updatedTask.status,
+      );
+    }
+    return updatedTask;
   }
 
-  async deleteTask(taskId:string,userId:string){
-    const task: ITaskSchema | null = await this.taskSchema.findById(
-        taskId,
-    );
+  async deleteTask(taskId: string, userId: string) {
+    const task: ITaskSchema | null = await this.taskSchema.findById(taskId);
     if (!task) throw new Error(TaskServiceErrors.TASK_NOT_FOUND);
     if (!(await this.boardService.checkUserTeamConnection(task.team, userId)))
       throw new Error(TaskServiceErrors.BOARD_NOT_ACCESSIBLE_TO_USER);
-    const deletedDoc :ITaskSchema | null = await this.taskSchema.findByIdAndDelete(taskId)
-    if(!deletedDoc) throw new Error(TaskServiceErrors.TASK_NOT_FOUND)
-    return deletedDoc
+    const deletedDoc: ITaskSchema | null =
+      await this.taskSchema.findByIdAndDelete(taskId);
+    if (!deletedDoc) throw new Error(TaskServiceErrors.TASK_NOT_FOUND);
+    await this.boardService.deleteTask(
+      deletedDoc.board,
+      deletedDoc.id,
+      deletedDoc.status,
+    );
+    return deletedDoc;
   }
-
 }
 
 export enum TaskServiceErrors {

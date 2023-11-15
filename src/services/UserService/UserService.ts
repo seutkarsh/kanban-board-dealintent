@@ -63,6 +63,14 @@ export class UserService {
 
     return user.team
   }
+
+  async addTeam(teamId:string,userId:string){
+    await this.userSchema.findByIdAndUpdate(userId,{$push:{team:teamId}})
+  }
+
+  async removeTeam(teamId:string,userId:string){
+    await this.userSchema.findByIdAndUpdate(userId,{$pull:{team:teamId}})
+  }
   private getUserByEmail(email: string) {
     return this.userSchema.findOne({ email: email });
   }
