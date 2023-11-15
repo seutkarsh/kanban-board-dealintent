@@ -24,6 +24,7 @@ export default (router: Router) => {
       Logger.error(e.message);
       response.setError(e.message);
     }
+    res.json(response)
   });
 
   router.post("/createTeam", async (req: Request, res: Response) => {

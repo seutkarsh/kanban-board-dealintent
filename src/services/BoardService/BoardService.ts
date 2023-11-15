@@ -4,7 +4,6 @@ import {IBoard, IBoardCreationFields} from "./IBoardService";
 import { TeamService } from "../TeamService/TeamService";
 import { IBoardSchema } from "../../models/Schemas/board";
 import mongoose, { Model } from "mongoose";
-import { ITeamSchema } from "../../models/Schemas/team";
 import {TaskStatus} from "../TaskService/TaskService";
 
 @Service()
@@ -14,14 +13,12 @@ export class BoardService {
   private boardSchema: Model<IBoardSchema & mongoose.Document> =
     Container.get("BoardSchema");
   async getAllBoards(userId: string):Promise<IBoard[]> {
-    const boards: IBoard[] = [];
     const teams:string[] = await this.userService.getTeamsByUserId(userId);
     const boardIds: string[] = await this.teamService.getBoardsByTeamId(teams);
     return await this.prepareBoardListing(boardIds)
   }
 
   async getBoardsByTeam(teamId:string,userId:string):Promise<IBoard[]>{
-      const boards: IBoard[] = [];
       if(! await this.checkUserTeamConnection(teamId,userId)) throw new Error(BoardServiceErrors.TEAM_NOT_ACCESSIBLE_BY_USER)
       const boardIds: string[] = await this.teamService.getBoardsByTeamId([teamId]);
       return await this.prepareBoardListing(boardIds)

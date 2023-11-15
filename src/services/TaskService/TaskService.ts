@@ -12,7 +12,6 @@ import {
 @Service()
 export class TaskService {
   private boardService = Container.get(BoardService);
-  private teamService = Container.get(TeamService);
   private taskSchema: Model<ITaskSchema & mongoose.Document> =
     Container.get("TaskSchema");
   async getTasksByBoardId(boardId: string, userId: string) {

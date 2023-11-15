@@ -9,7 +9,6 @@ import mongoose, { Model } from "mongoose";
 import * as crypto from "crypto-js";
 import config from "../../config";
 import * as jwt from "jsonwebtoken";
-import { ResponseWrapper } from "../../api/responses/responseWrapper";
 
 @Service()
 export class UserService {

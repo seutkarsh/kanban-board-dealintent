@@ -22,8 +22,7 @@ export const authentication = async (
   } else {
     try {
       const authenticationService = Container.get(AuthorizationService);
-      const userData = authenticationService.verifyToken(accessToken);
-      req.user = userData;
+      req.user  = authenticationService.verifyToken(accessToken);
     } catch (e) {
       Logger.error(e);
       return next(
